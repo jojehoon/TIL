@@ -58,7 +58,31 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function removeTransition(e){
+    if (e.propertyName !== 'transform') return;
+    // 이벤트 타겟(e.target)의 목록(classList)에 접근하여 playing 클래스를 삭제(remove)
+    e.target.classList.remove('playing'); 
+  }
 
+  function playSound(e){
+    // 이벤트 객체(e)의 입력된 키(keyCode)가 담긴 audio 요소를 찾아(querySelector) 상수(const)에 대입
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); 
+    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    // audio 상수에 대입된 값과 일치 하지 않는다면(if) 함수를 return
+    if (!audio) return;
+    
+    // 입력된 키(keyCode)가 담긴 div 목록에(classList)에 접근하여 playing 클래스를 추가(add)
+    key.classList.add('playing');
+    // audio의 재생 위치를 0초로
+    audio.currentTime = 0;
+    // 입력된 키(keyCode)와 일치하는 audio를 play
+    audio.play();
+  }
+
+  const keys = Array.from(document.querySelectorAll('.key'));
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  // window 객체에 keydown 이벤트를 통하여 playsound 리스너를 등록
+  window.addEventListener('keydown', playSound);
 </script>
 
 
