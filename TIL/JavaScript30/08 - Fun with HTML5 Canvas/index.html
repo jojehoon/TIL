@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+  //해당 selector와 일치하는 document 내의 첫 번째 element를 반환
+  const canvas = document.querySelector('#draw');
+  // canvas에서 지정된 drawing context를 반환하거나, context 식별자가 지원되지 않으면 null을 반환
+  const ctx = canvas.getContext('2d');
+  // browser 윈도우의 뷰포트 width/height을 반환
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // 선에 사용할 color(or style)을 지정, default color은 #000
+  ctx.strokeStyle = '#BADA55';
+  // 길이가 0이 아닌 두 개의 연결 segments(lines, arcs, curves)를 결합 하는 방법을 결정
+  ctx.lineJoin = 'round';
+  // line의 끝점을 그리는 방법을 결정, (butt, round, square)의 속성이 있음
+  ctx.lineCap = 'round';
+  // line의 두께를 설정, (0, 음수, 무한대, NaN) 값은 무시
+  ctx.lineWidth = 100;
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true;
+
+  function draw(e){
+    if(!isDrawing) return;
+    /*
+     * 질문 : if(!isDrawing) return;
+     */
+    console.log(e);
+    // line의 color 값으로 hsl(hue색조--변수, saturation채도, lightness명도) 를 지정
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    // sub-paths의 목록을 비우고 새 경로를 시작, 새 경로를 만들때 이 메서드를 호출
+    ctx.beginPath();
+    // sub-paths의 시작점을 lasxX, lastY로 이동
+    ctx.moveTo(lastX, lastY);
+    // sub-paths 경로의 마지막 점을 e.offsetX, e.offsetY 좌표에 직선으로 연결
+    ctx.lineTo(e.offsetX, e.offsetY);
+    // 0이 아닌 winding rule을 사용하여 strokeStyle로 현재 또는 지정된 경로를 stroke한다
+    ctx.stroke();
+    // lasxX, lastY에 e.offsetX, e.offestY를 대입
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+
+
+    hue++;
+    if(hue >= 360){
+      hue = 0;
+    }
+    // line의 두께가 100이상(>=)이거나(||) 1이하(<=)라면
+    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1){
+      // direction은 현재의 값이 아닌(!direction) true나 false를 대입
+      direction = !direction;
+    }
+
+    // direction이 조건과 
+    if(direction){
+      // 일치하다면 linewidth는 증감(++)
+      ctx.lineWidth++;
+    }else{
+      // 일치하지 않으면 linewidth는 감소(--)
+      ctx.lineWidth--;
+    }
+    // 1 - 100 사이에서 라인두께를 자동으로 조절
+  }
+
+  // 캔버스에서 mousedown이 발생하면 
+  canvas.addEventListener('mousedown', (e) => {
+    // eventTarget의 isDrawing에 true를 대입
+    isDrawing = true;
+    // lastX/Y에 eventTarget의 offsetX/Y 좌표를 대입
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+
+  // 캔버스에서 지정된 eventType이 발생하면 불려질 eventListener를 등록
+  canvas.addEventListener('mousemove', draw);
+  // mouseup, mouseout의 eventType이 발생하면 isDrawing에 false를 대입
+  // 마우스에 손을 떼거나 벗어나면 draw 함수 중단
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+  
+
+  // 정리 : canvas에 관한 메서드를 많이 경험해 보았다
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+</style>
+
+</body>
+</html>
