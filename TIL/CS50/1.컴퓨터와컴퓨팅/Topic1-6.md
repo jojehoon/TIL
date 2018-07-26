@@ -1,5 +1,5 @@
 
-# Topic5 : 16진수
+# Topic6 : 16진수
 
 
 ## 16진수 (Hexadecimal)
