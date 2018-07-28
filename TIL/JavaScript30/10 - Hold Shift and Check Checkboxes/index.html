@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+<body>
+  <style>
+
+    html {
+      font-family: sans-serif;
+      background:#ffc600;
+    }
+
+    .inbox {
+      max-width:400px;
+      margin:50px auto;
+      background:white;
+      border-radius:5px;
+      box-shadow:10px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .item {
+      display:flex;
+      align-items:center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+
+    .item:last-child {
+      border-bottom:0;
+    }
+
+
+    input:checked + p {
+      background:#F9F9F9;
+      text-decoration: line-through;
+    }
+
+    input[type="checkbox"] {
+      margin:20px;
+    }
+
+    p {
+      margin:0;
+      padding:20px;
+      transition:background 0.2s;
+      flex:1;
+      font-family:'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+
+
+  </style>
+   <!--
+   The following is a common layout you would see in an email client.
+
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+
+  -->
+  <div class="inbox">
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Check one item</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Hold down your Shift key</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Check a lower item</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Everything inbetween should also be set to checked</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Try do it without any libraries</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Just regular JavaScript</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Good Luck!</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Don't forget to tweet your result!</p>
+    </div>
+  </div>
+
+<script>
+  // .inbox input[type="checkbox"]와 일치하는 요소(checkbox)의 목록(NodeList)를 return
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+  
+  let lastChecked;
+
+  function handleCheck(e){
+    let inBetween = false;
+
+    // KeyboardEvent.shiftKey : 이벤트가 발생할 때 shift 키가 눌려 졌는지 true or false를 return
+    // this.checked : eventTarget이 checked 속성이 true인지(체크 되어 있는지)
+    // shiftKey를 눌렀고, eventTarget이 check가 되어있다면
+    if(e.shiftKey && this.checked){
+
+      // checkboxes의 루프를 돌면서
+      checkboxes.forEach(checkbox => {
+
+        /*
+         * 질문 : checkbox에서 this, checkbox === lastChecked 의 구문 이해 어려움
+         */ 
+        if(checkbox === this || checkbox === lastChecked){
+          // inBetween의 값을 true or false로 변환(!inBetween)
+          inBetween = !inBetween;
+        }
+
+        // inBetween의 값이 true(!inBetween)이면
+        if(inBetween){
+          // checkbox는 check가 되게 하라 : 첫 번째와 두 번째 사이의 checkbox를 모두 checked 처리
+          checkbox.checked = true;
+        }
+      })
+    }
+    // lastChecked에 eventTarget을 대입, 첫 번째 check된 checkbox 값을 변수에 대입
+    lastChecked = this;
+    
+  }
+
+  // click 이벤트가 발생하면 handlerCheck 함수를 실행
+  checkboxes.forEach(chekbox => chekbox.addEventListener('click', handleCheck));
+
+  // 정리: 여러 조건문과 그 조건문의 this의 의미가 어려움
+</script>
+</body>
+</html>
