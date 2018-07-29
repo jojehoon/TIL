@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+    console.log('hello');
+
+    // Interpolated (덧붙이다, (중간값을)채우다)
+    // 질문 : 문자열을 출력한다 ??? 
+    console.log('Hello I am a %s string!', '💩');
+
+    // Styled
+    // console 출력을 스타일링 하기, '%c' 지시문을 사용하여 console 출력에 css 스타일을 적용
+    console.log('%c I am some great text', 'font-size:50px; background:red; text-shadow: 10px 10px 0 blue');
+
+    // warning!
+    // 경고 메시지를 출력한다. 문자열 치환(string substitution)과 추가 인자를 사용 할 수 있다
+    console.warn('OH NOOO');
+
+    // Error :|
+    // 에러 메시지를 출력한다. 문자열 치환(string substitution)과 추가 인자를 사용 할 수 있다
+    console.error('Shit!');
+
+    // Info\
+    // 정보성 로그를 출력한다. 문자열 치환(string substitution)과 추가 인자를 사용 할 수 있다
+    console.info('Crocodiles eat 3-4 people per year');
+
+    // Testing
+    const p = document.querySelector('p');
+    // console.assert(expression, object), 첫 번째 인자(expression)가 falseㅇ니 경우 로그 메시지와 스택 트레이스를 console에 출력
+    // console.assert(1 === 2, 'You did not select the right Element!');
+    console.assert(p.classList.contains('ouch'), 'That is wrong!');
+
+    // clearing
+    // console에 기록된 내용들을 지운다
+    console.clear();
+
+    // Viewing DOM Elements
+    console.log(p);
+    // log 출력시 객체 정보를 Tree형태로 출력
+    console.dir(p);
+    // console에 기록된 내용들을 지운다
+    console.clear()
+
+    // Grouping together
+    dogs.forEach(dog => {
+      // group() group을 생성하여 level별로 출력을 들여쓰기 한다. 들여쓰기 level을 줄이려면 groupEnd()를 호출한다
+      // groupCollapsed()는 level을 Inline-Gourp로 만들어 그룹이 축소된 상태에서 시작
+      console.groupCollapsed(`${dog.name}`);
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age * 7} years old`);
+      // 현재 행성된 group을 닫는다
+      console.groupEnd(`${dog.name}`);
+    })
+
+    // counting
+    // 라벨이 호출된 횟수를 기록한다
+    console.count('Wes');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Wes');
+
+    // timing
+    // 지저된 이름으로 timer를 시작한다, 한 페이지에서 동시에 10,000개의 타이머 실행이 가능하다
+    console.time('fetching data');
+    fetch('https://api.github.com/users/wesbos')
+      .then(data => data.json())
+      .then(data => {
+        // 지정된 timer를 중지하고, timer 시작으로 부터 경과된 시간을 출력한다
+        console.timeEnd('fetching data');
+        console.log(data);
+      });
+
+      // table 형태로 된 데이터를 table로 보여준다
+      console.table(dogs);
+
+      /*
+       * 정리 : 브라우저 디버깅을 위한 console 객체의 method를 알아보았다, 전체적으로 이해하기 쉬웠다
+       */
+  </script>
+</body>
+</html>

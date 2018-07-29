@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+// 상수명 endpoint에 해당 json 주소를 대입
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+// cities 상수에 빈배열을 대입
+const cities = [];
+
+// fetch('주소', 설정객체) 주소에 요청할 주소를 입력하고, 설정객체에 get-post 등의 메소드-보낼 데이터 등을 넣을 수 있다
+// fetch() 메서드를 이용하여 비동기 네트워크 통신을 조작
+
+fetch(endpoint)
+  // .then(callback) then에서 응답 response 객체를 받는다
+  .then(blob => blob.json())
+  // cities 배열에 data를 넣는다(push())
+  .then(data => cities.push(...data))
+/*
+ * 질문 : fetch === jQuery.ajax ?
+ * 질문 : blob, data, json(), push(...data) 
+ */  
+
+function findMatches(wordToMatch, cities){
+  return cities.filter(place => {
+    // here we need to fiture out if the city or state matches what was searched
+    const regex = new RegExp(wordToMatch, 'gi');
+    // place의 city 속성 혹은(||) place의 state의 regex와 매치되는 부분을 검색하여 return
+    return place.city.match(regex) || place.state.match(regex)
+  });
+}
+/*
+ * 질문 : const regex = new RegExp(wordToMatch, 'gi');
+ */ 
+
+// place.population 인수로 전달 받은 매개변수 x를 
+function numberWithCommas(x){
+  // 문자열로(toString())변환후 지정된 패턴에 일치하는 부분이 교체된 새로운 문자열을 return
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+/*
+  * 질문 : 정규식? (/\B(?=(\d{3})+(?!\d))/g, ',')
+  */
+
+function displayMatched(){
+  // matchArray(상수)에 findMatches라는 함수 표현식 선언
+  const matchArray = findMatches(this.value, cities);
+  // html(상수)에
+  const html = matchArray.map(place => {
+    const regex = new RegExp(this.value, 'gi');
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
+      </li>
+      `;
+  }).join('');
+  // suggetions에 html(상수)를 자식으로 할당
+  suggestions.innerHTML = html;
+}
+/*
+ * 질문
+ *  const html = matchArray.map(place => {
+ *  const regex = new RegExp(this.value, 'gi');
+ *  const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+ *  const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+ *  return `
+ *     <li>
+ *       <span class="name">${cityName}, ${stateName}</span>
+ *       <span class="population">${numberWithCommas(place.population)}</span>
+ *     </li>
+ *     `;
+ *  }).join('');
+ */
+
+// .querySelector(selecotrs) selectors와 일치하는 document의 첫 번째 element를 반환
+const searchInput = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
+
+// target.addEventListener(type, listener)
+// target에서 지정된 eventType(change, keyup)이 일어나면 불러질 특정 listener를 등록
+searchInput.addEventListener('change', displayMatched);
+searchInput.addEventListener('keyup', displayMatched);
+
+
+// 정리 전체적으로 구문 해석이 많이 버거웠거나 대부분 이해하기 어려움
+
+</script>
+  </body>
+</html>
