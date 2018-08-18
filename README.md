@@ -4,4 +4,4 @@ Today I Learned
 
 ## Table of Contents
 * CS50
-* JavaScirpt30
+* JavaScript30
