@@ -1,9 +1,7 @@
-# Today I Learned
+# TIL
 
-* Jo Jehoon이 오늘 새로 배운 것을 다음의 규칙으로 commit 합니다.
+Today I Learned
 
-## JavaScript30
-*
-
-## CS50 
-*
+## Table of Contents
+* CS50
+* JavaScirpt30
