@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Videos</title>
+  <style>
+    *{margin:0;padding:0}
+  </style>
+</head>
+<body>
+  <ul class="videos">
+    <li data-time="5:43">
+      Video 1
+    </li>
+    <li data-time="2:33">
+      Video 2
+    </li>
+    <li data-time="3:45">
+      Video 3
+    </li>
+    <li data-time="0:47">
+      Video 4
+    </li>
+    <li data-time="5:21">
+      Video 5
+    </li>
+    <li data-time="6:56">
+      Video 6
+    </li>
+    <li data-time="3:46">
+      Video 7
+    </li>
+    <li data-time="5:25">
+      Video 8
+    </li>
+    <li data-time="3:14">
+      Video 9
+    </li>
+    <li data-time="3:31">
+      Video 10
+    </li>
+    <li data-time="5:59">
+      Video 11
+    </li>
+    <li data-time="3:07">
+      Video 12
+    </li>
+    <li data-time="11:29">
+      Video 13
+    </li>
+    <li data-time="8:57">
+      Video 14
+    </li>
+    <li data-time="5:49">
+      Video 15
+    </li>
+    <li data-time="5:52">
+      Video 16
+    </li>
+    <li data-time="5:50">
+      Video 17
+    </li>
+    <li data-time="9:13">
+      Video 18
+    </li>
+    <li data-time="11:51">
+      Video 19
+    </li>
+    <li data-time="7:58">
+      Video 20
+    </li>
+    <li data-time="4:40">
+      Video 21
+    </li>
+    <li data-time="4:45">
+      Video 22
+    </li>
+    <li data-time="6:46">
+      Video 23
+    </li>
+    <li data-time="7:24">
+      Video 24
+    </li>
+    <li data-time="7:12">
+      Video 25
+    </li>
+    <li data-time="5:23">
+      Video 26
+    </li>
+    <li data-time="3:34">
+      Video 27
+    </li>
+    <li data-time="8:22">
+      Video 28
+    </li>
+    <li data-time="5:17">
+      Video 29
+    </li>
+    <li data-time="3:10">
+      Video 30
+    </li>
+    <li data-time="4:43">
+      Video 31
+    </li>
+    <li data-time="19:43">
+      Video 32
+    </li>
+    <li data-time="0:47">
+      Video 33
+    </li>
+    <li data-time="0:47">
+      Video 34
+    </li>
+    <li data-time="3:14">
+      Video 35
+    </li>
+    <li data-time="3:59">
+      Video 36
+    </li>
+    <li data-time="2:43">
+      Video 37
+    </li>
+    <li data-time="4:17">
+      Video 38
+    </li>
+    <li data-time="6:56">
+      Video 39
+    </li>
+    <li data-time="3:05">
+      Video 40
+    </li>
+    <li data-time="2:06">
+      Video 41
+    </li>
+    <li data-time="1:59">
+      Video 42
+    </li>
+    <li data-time="1:49">
+      Video 43
+    </li>
+    <li data-time="3:36">
+      Video 44
+    </li>
+    <li data-time="7:10">
+      Video 45
+    </li>
+    <li data-time="3:44">
+      Video 46
+    </li>
+    <li data-time="3:44">
+      Video 47
+    </li>
+    <li data-time="4:36">
+      Video 48
+    </li>
+    <li data-time="3:16">
+      Video 49
+    </li>
+    <li data-time="1:10">
+      Video 50
+    </li>
+    <li data-time="6:10">
+      Video 51
+    </li>
+    <li data-time="2:14">
+      Video 52
+    </li>
+    <li data-time="3:44">
+      Video 53
+    </li>
+    <li data-time="5:05">
+      Video 54
+    </li>
+    <li data-time="6:03">
+      Video 55
+    </li>
+    <li data-time="12:39">
+      Video 56
+    </li>
+    <li data-time="1:56">
+      Video 57
+    </li>
+    <li data-time="4:04">
+      Video 58
+    </li>
+  </ul>
+  <button type="button" id="btn">오픈</button>
+<script>
+// const timeNodes = document.querySelectorAll('[data-time]');
+// const seconds = Array.from(timeNodes).map(function(node){
+// node.dataset.time
+// })
+
+// data-time속성을 가진 nodeList(유사배열, Array-Like-Object)를 Array로 반환
+const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
+
+
+const seconds = timeNodes
+  // Array.prototye.map(func) 배열의 모든 요소에게 지정한 함수를 호출하고, 그 결과를 리턴하여 새로운 배열을 반환
+  .map(node => node.dataset.time) // data-time 속성 값을 반환
+  .map(timeCode => {
+    // 비구조화 할당? ES6 destructuring assignment? 이해가 잘 안됨
+    const [mins, secs] = timeCode.split(':').map(parseFloat); // ':'기준으로 문자열을 분리하여 부동소수점 반환(?)
+    return (mins * 60) + secs; // seconds 단위로 변환, mins분 * 60 + 초secs
+  })
+  .reduce((total, vidSeconds) => total + vidSeconds);
+  // Array.prototype.reduce(callback(total, currentValue, index, arr))
+  // 배열 요소를 왼쪽에서 오른족으로 순회하며 콜백함수의 결과를 하나의 값으로 반환, 모든 동영상의 총 재생시간
+  
+  let secondsLeft = seconds;
+  // Math.floor() 주어진 숫자보다 작거나 같은 가장 큰 정수를 반환
+  const hours = Math.floor(secondsLeft / 3600); // 시간으로 반환 60분 * 60초
+  secondsLeft = secondsLeft % 3600; // 나눈 나머지값
+
+  const mins = Math.floor(secondsLeft / 60); //나머지 값을 분으로 나누고
+  secondsLeft = secondsLeft % 60; // 나머지 값을 초로 나눈다
+
+  console.log(hours, mins, secondsLeft);
+
+  // 정리 : 문법적으로 어려운 점은 없었지만, 메서드 뜻이 생각이 바로 안나서 mdn에 계속 검색을 해보게 된다
+  // 비구조화 할당은 아직도 이해가 안됨
+
+</script>
+</body>
+</html>

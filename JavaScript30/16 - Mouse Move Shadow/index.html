@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+
+  <style>
+  html {
+    color: black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,1);
+    font-size: 100px;
+  }
+  </style>
+
+<script>
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1');
+  const walk = 100;
+
+  function shadow(e){
+    // const width = hero.offsetWidth;
+    // const height = hero.offsetHeight;
+    // offsetWidth, offsetHeight : padding + border + scrollbar 를 보함한 엘리먼트의 사이즈를 리턴
+    // HTMLElment.offsetWidth는 element의 레이아웃 너비를 반환 (read-only 속성)
+    const {offsetWidth : width, offsetHeight : height} = hero;
+    // let x = e.offsetX
+    // let y = e.offsetY
+    // MouseEvent.offsetX
+    let   {offsetX : x, offsetY : y} = e;
+    // 비구조화 할당? ES6 destructuring assignment? 이해가 잘 안됨
+    console.log(this, e.target);
+    // this = .hero, e.target = h1
+    // h1 안에서는 실행이 안됨?
+    if(this !== e.target){
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop; 
+      // HTMLElement.offsetLeft는 현재 요소의 왼쪽 위 모서리가 HTMLElement.offsetParent 노드 내에서 왼쪽으로 오프센 된 픽셀 수를 반환 (read-only 속성)
+    }
+
+    // Math 객체의 round메소드를  사용하여 지정된 식을 반올림
+    const xWalk = Math.round(x / width * walk) - (walk / 2);
+    const yWalk = Math.round(y / height * walk) - (walk / 2);
+
+    // text-shadow 속성에 접근하여 수정
+    text.style.textShadow = `
+      ${xWalk}px      ${yWalk}px      0 rgba(255,0,255,0.7),
+      ${xWalk * -1}px ${yWalk}px      0 rgba(0,255,255,0.7),
+      ${yWalk}px      ${xWalk * -1}px 0 rgba(0,255,0,0.7),
+      ${yWalk * -1}px  ${xWalk}px     0 rgba(0,0,255,0.7)
+      `
+
+    // console.log('offsetX : ' + e.offsetX + '  offsetY : ' + e.offsetY + ' offsetWidth : ' +  hero.offsetWidth + '  offsetHeight : ' + hero.offsetHeight + ' offsetLeft : ' + e.target.offsetLeft + ' offsetTop : ' + e.target.offsetTop);
+  }
+
+  hero.addEventListener('mousemove', shadow);
+
+  // 정리 : JS 문법적으로는 어려운게 없었으나, 마우스 좌표에 따라 해당식을 위와 같이 기술한 이유를 이해하기 어려웠음
+</script>
+</body>
+</html>
+
