@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="voiceinator">
+
+      <h1>The Voiceinator 5000</h1>
+
+      <select name="voice" id="voices">
+        <option value="">Select A Voice</option>
+      </select>
+
+      <label for="rate">Rate:</label>
+      <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
+
+      <label for="pitch">Pitch:</label>
+
+      <input name="pitch" type="range" min="0" max="2" step="0.1">
+      <textarea name="text">Hello! I love JavaScript 👍</textarea>
+      <button id="stop">Stop!</button>
+      <button id="speak">Speak</button>
+
+    </div>
+
+<script>
+  // web API SpeechSynthesisUtterance는 음성 요청을 나타낸다
+  // 음성 서비스에서 읽어야하는 콘텐츠 및 언어(언어, 음높이, 음량)를 읽는 방법에 대한 정보가 포함되어 있다
+  const msg = new SpeechSynthesisUtterance();
+  let voices = [];
+  const voicesDropdown = document.querySelector('[name="voice"]');
+  const options = document.querySelectorAll('[type="range"], [name="text"]');
+  const speakButton = document.querySelector('#speak');
+  const stopButton = document.querySelector('#stop');
+  msg.text = document.querySelector('[name="text"]').value;
+
+  // 사용 가능한 음성 목록중 en만 필터링하여 option 태그로 셀렉팅한다
+  function populateVoices(){
+    // speechSynthesisInstance.getVoices();
+    // 현재 장치에서 사용 가능한 모든 음성을 나타내는 SpeechSynthesisVoice 개체의 목록을 반환
+    voices = this.getVoices();
+    voicesDropdown.innerHTML = voices
+      // filter() 메서드는 주어진 판별 함수를 통과하는 요소를 모아 새로운 배열로 만들어 반환
+      // arr.filter(callback(element, index, array))
+      // arr.filter(callback(처리할 현재 요소, 처리할 현재 요소의 인덱스, filter를 호출한 배열))
+      // lang="en" 속성이 담긴 요소만 찾아 새로운 배열을 만들어 반환하고
+      .filter(voice => voice.lang.includes('en'))
+      // map() 메서드는 배열 내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열을 반환
+      // arr.map(callback(currentValue, index, array))
+      // arr.map(callback(처리할 현재 요소, 처리할 현재 요소의 인덱스, map()을 호출한 배열))
+      // option엘리먼트에 각각 지정된 값을 넣어 문자열로 반환한다
+      .map(voice => `<option value="${voice.name}?>${voice.name} (${voice.lang})</option>`).join();
+  }
+
+  // 변경된 셀렉팅 값을 음성으로 지정하고 실행시킨다
+  function setVoice(){
+    // voices배열에서 voice.name과 this.value가 일치하는 요소를 찾아서 음성으로 지정한다
+    msg.voice = voices.find(voice => voice.name === this.value);
+    toggle();
+  }
+
+  // parameter로 주어진 startOver = true의 구문이 헷갈림
+  // 발언을 취소 시키고, speak버튼일때만 다시 실행시킨다
+  function toggle(startOver = true){
+    // 모든 발언을 발언 큐에서 제거
+    // 발언이 현재 통역 중이면 즉시 말을 멈춘다
+    speechSynthesis.cancel();
+    // startOver === true 면 msg를 speak()
+    // stopButton에서는 함수를 호출할때 인자로 false가 지정되어 있어 조건문이 실행되지 않는다
+    if(startOver){
+      speechSynthesis.speak(msg);
+    }
+  }
+
+  // 컨트롤러 값을 반영한다
+  function setOption(){
+    // rate, pitch 컨트롤러의 값과, textarea의 value을 SpeechSynthesisUtterance의 name으로 지정하는 것 같은데 잘 모르겠다...
+    msg[this.name] = this.value;
+  }
+
+  // voiceschanged이벤트는 SpeechSynthesis.getVoices()에서 반활 할 SpeechSynthesisVoice의 목록이 변경될때 마다 발생
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+
+  // 음성목록이 변경될 때 마다 실행
+  voicesDropdown.addEventListener('change', setVoice);
+
+  // options에 변화가 있을 때마다 함수 실행
+  options.forEach(option => option.addEventListener('change', setOption));
+
+  // toggle() 실행
+  speakButton.addEventListener('click', toggle);
+
+  // 인자로 false를 전달 하기 때문에 cancel()만 실행되고 조건문은 실행되지 않는다
+  stopButton.addEventListener('click', () => toggle(false));
+
+  // 정리 : Web API 관련된 챕터를 진행할때 마다 생소한 메서드나 속성들을 접하게된다.. 나중에 다시 사용할 수 있을까?
+</script>
+
+</body>
+</html>
