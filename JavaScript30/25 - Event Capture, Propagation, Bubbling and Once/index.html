@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *:before, *:after { 
+    box-sizing: inherit; 
+  }
+
+  div {
+    width: 100%;
+    padding: 100px;
+  }
+
+  .one {
+    background: thistle;
+  }
+
+  .two {
+    background: mistyrose;
+  }
+
+  .three {
+    background: coral;
+  }
+</style>
+
+<button type="button">Button</button>
+<script>
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+  function logText(e){
+    // eventTarget의 className을 반환
+    console.log(this.classList.value);
+    //e.stopPropagation(); // stop bubbling
+  }
+
+   
+  /* divs 각요소 마다 click 이벤트를 바인딩하여 logText(이벤트 리스너(혹은 콜백함수)) 호출
+   *
+   * eventTarget.addEventListener(type, listener, options);
+   *
+   * options
+   *  - capture : 이벤트 캡처링 적용 여부 ? true이면 캡처링 : false이면 버블링(기본값)
+   *               - DOM 트리의 하단에 있는 eventTarget으로 전송하기 전에, 등록된 listener로 이 타입의 이벤트 전송여부를 나타내는 Boolean
+   *               - 트리에서 위쪽으로 버블링되는 이벤트는 캡처를 사용하도록, 지정된 listenter를 트리거 하지않는다
+   *               - 이벤트 버블링과 캡쳐는 두 엘리먼트가 해당 이벤트에 대한 핸들(함수)를 등록한 경우, 다른 요소 내에 중첩된 요소를 발생하는 이벤트 전파 방법이다
+   *  - once    : 이벤트를 한번만 호출하고 해제되는 옵션
+   *               - 리스너를 추가한 후 한 번 이상 호출해야 함을 나타내는 Boolean, true이면 호출할 때 listener가 자동으로 삭제
+   *  - passive : 스크롤 성능 향상을 위한 옵션으로 true일 경우 스크롤을 위해 블록되는 것을 방지한다. 이 경우, preventDefault를 사용할 수 없다
+   *               - true일 경우, listener에서 지정한 함수가 preventDefault()를 호출하지 않음을 나타내는 Boolean, passive listener가 preventDefault()를 호출하면 user agent는 콘솔 경고를 생성하는 것 외의 작업은 수행하지 않는다
+   * 
+   * capturing 이벤트가 발생한 target element의 parent element부터 target element까지 이벤트가 전달
+   * bubbling  이벤트가 발생한 traget element부터 parent element까지 이벤트가 전달
+   * event.stopPropagation() 이벤트 전파를 방지
+   * event.preventDefault() 기본 이벤트 핸들러의 동작을 방지
+   */
+  divs.forEach(div => div.addEventListener('click', logText, {
+    capture: false,
+    // once: true
+  }));
+
+  button.addEventListener('click', () => {
+    console.log('Click!!!');
+  }, {
+    once: true
+  });
+
+  // 정리: 스터디 시간때 다뤘던 내용이다 기억이 모호했었는데, 다시 정리해 보는 시간이었다, options중에 passive는 다시 찾아봐야겠다
+</script>
+</body>
+</html>
