@@ -229,6 +229,7 @@
     this.classList.add('trigger-enter');
     // 포커스에 trigger-enter 클래스가 있다면 trigger-enter-active 클래그를 150ms 후에 추가
     // contains()에서 true를 반환하면 논리연산자 &&로... 명확하게 이해가 안된다
+    // AND 연산자로 true 일 때만 다음 식을 리턴
     setTimeout(() => this.classList.contains('trigger-enter') && this.classList.add('trigger-enter-active'), 150);
     
     background.classList.add('open');
