@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+
+<script>
+  const speed = document.querySelector('.speed');
+  const bar = speed.querySelector('.speed-bar');
+  const video = document.querySelector('.flex');
+
+  function handleMove(e){
+    // speed안에서 mouse가 위치한 거리를 구하기 위한 수식
+    // mouse의 좌표에서 parent 기준으로 offsetTop을 빼면 speed-bar의 height를 알아낼 수 있다
+    const y = e.pageY - this.offsetTop;
+    // 마우스의 위치 / speed의 높이
+    const percent = y / this.offsetHeight;
+    const min = 0.4;
+    const max = 4;
+    // 가장 가까운 정수로 반올림 한 값을 반환, 백분율로 나타냄
+    const height = (percent * 100) + '%';
+    // minimum과 maximum의 정의하는데..
+    const playbackRate = percent * (max - min) + min;
+    // 마우스으 위치만큼 speed-bar의 height를 늘림
+    bar.style.height = height;
+    // 고정 소수점 표기법을 사용하여 숫자의 서식을 지정, 소수점 2자리까지 표기
+    bar.textContent = playbackRate.toFixed(2) + 'x';
+    // HTMLMediaElement.playbackRate: 미디어가 재생되는 속도를 설정
+    // 마우스의 위치만큼 재생 속도를 설정
+    video.playbackRate = playbackRate;
+    console.log(`e.pageY: ${e.pageY}, offetTop: ${this.offsetTop}, y : ${y}, offsetHeight:${this.offsetHeight}, percent: ${percent}, playbackRate: ${playbackRate}`);
+  }
+
+  speed.addEventListener('mousemove', handleMove);
+
+  // 정리: 문법은 크게 어려운게 없었다
+</script>
+</body>
+</html>

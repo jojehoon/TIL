@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click and Drag</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="items">
+    <div class="item item1">01</div>
+    <div class="item item2">02</div>
+    <div class="item item3">03</div>
+    <div class="item item4">04</div>
+    <div class="item item5">05</div>
+    <div class="item item6">06</div>
+    <div class="item item7">07</div>
+    <div class="item item8">08</div>
+    <div class="item item9">09</div>
+    <div class="item item10">10</div>
+    <div class="item item11">11</div>
+    <div class="item item12">12</div>
+    <div class="item item13">13</div>
+    <div class="item item14">14</div>
+    <div class="item item15">15</div>
+    <div class="item item16">16</div>
+    <div class="item item17">17</div>
+    <div class="item item18">18</div>
+    <div class="item item19">19</div>
+    <div class="item item20">20</div>
+    <div class="item item21">21</div>
+    <div class="item item22">22</div>
+    <div class="item item23">23</div>
+    <div class="item item24">24</div>
+    <div class="item item25">25</div>
+  </div>
+
+<script>
+  const slider = document.querySelector('.items');
+  // mousemove 토글을 위한 변수 선언
+  let isDown = false;
+  let startX, scrollLeft;
+
+  // mouse 버튼을 눌렀을 때
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    // pageX : 문서의 왼쪽 가장자리를 기준으로 마우스를 클릭 한 X (가로) 좌표 (픽셀)를 반환
+    // offsetLeft : HTMLElement.offsetParent 노드 내에서 왼쪽으로 오프셋 된 픽셀 수를 반환
+    // 마우스 클릭 좌표x - 슬라이드 엘리먼트의 왼쪽 기준 픽셀 값(여백이 있을 때를 대비)
+    startX = e.pageX - slider.offsetLeft;
+    // 요소의 내용이 왼쪽으로 스크롤되는 픽셀 수를 가져 오거나 설정
+    scrollLeft = slider.scrollLeft;
+  });
+
+  // 타겟에서 마우스 포인터가 벗어났을 때
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  // 마우스 버튼을 눌렀다가 놓았을 때
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  // 타겟에서 마우스를 움질일 때
+  slider.addEventListener('mousemove', (e) => {
+    // isDown이 false 이면 return을 반환
+    if(!isDown) return // stop the fn form running
+    // 이벤트를 취소할 수 있는 경우, 그 이벤트를 취소
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    // (마우스를 움직였을 때 좌표 - 마우스를 눌렀을 때 좌표) * 더 빠르게 스크롤 하기 위한 설정
+    const walk = (x - startX) * 3;
+    slider.scrollLeft = scrollLeft - walk;
+
+    // 정리 : 문법 이해는 쉬웠으나 엘리먼트를 마우스로 움직이기 위한 계산법을 이해하기가 어려웠음
+  });
+</script>
+
+  </body>
+</html>
